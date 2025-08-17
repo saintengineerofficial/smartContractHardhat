@@ -14,19 +14,20 @@ import TokenMaster from "./abis/TokenMaster.json";
 import config from "./config.json";
 
 function App() {
-  const [account, setAccount] = useState(null);
   const [provider, setProvider] = useState(null);
+  const [account, setAccount] = useState(null);
+
   const [tokenMaster, setTokenMaster] = useState(null);
   const [occasions, setOccasions] = useState([]);
+
   const [occasion, setOccasion] = useState({});
   const [toggle, setToggle] = useState(false);
 
   const loadBlockchainData = async () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum); // 获取metamask的provider实例,window.ethereum是metamask的实例
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(provider);
-    const network = await provider.getNetwork(); // 获取metamask网络
 
-    // 获取tokenMaster合约,传入合约地址和abi,provider实例
+    const network = await provider.getNetwork();
     const tokenMaster = new ethers.Contract(
       config[network.chainId].TokenMaster.address,
       TokenMaster,
@@ -35,21 +36,20 @@ function App() {
     setTokenMaster(tokenMaster);
 
     const totalOccasions = await tokenMaster.totalOccasions();
+    const occasions = [];
 
-    let occasions = [];
-    for (let i = 1; i <= totalOccasions; i++) {
+    for (var i = 1; i <= totalOccasions; i++) {
       const occasion = await tokenMaster.getOccasion(i);
       occasions.push(occasion);
     }
-    console.log("🚀 ~ loadBlockchainData ~ occasions:", occasions);
+
     setOccasions(occasions);
 
-    // 监听账户变化
     window.ethereum.on("accountsChanged", async () => {
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
-      const account = ethers.utils.getAddress(accounts[0]); // 格式规范化
+      const account = ethers.utils.getAddress(accounts[0]);
       setAccount(account);
     });
   };
@@ -78,10 +78,10 @@ function App() {
             tokenMaster={tokenMaster}
             provider={provider}
             account={account}
-            key={index}
-            setOccasion={setOccasion}
             toggle={toggle}
             setToggle={setToggle}
+            setOccasion={setOccasion}
+            key={index}
           />
         ))}
       </div>
