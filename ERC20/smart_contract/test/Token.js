@@ -7,7 +7,7 @@ describe("Token", () => {
   let addr1;
   let addr2;
 
-  beforeEach(async () => {
+  before(async () => {
     [owner, addr1, addr2] = await ethers.getSigners();
     const Token = await ethers.getContractFactory("Token");
     token = await Token.deploy(tokenSupply);

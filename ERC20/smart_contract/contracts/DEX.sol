@@ -37,7 +37,7 @@ contract DEX {
   }
 
   // 提现合约里的代币
-  function withdrawlToken() external onlyOwner() {
+  function withdrawToken() external onlyOwner() {
     uint balance = getTokenBalance();
     associatedToken.transfer(msg.sender, balance);
   }
